@@ -1,0 +1,46 @@
+# Dependency directories
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build artifacts
+dist/
+build/
+out/
+*.log
+*.bak
+
+# Environment configuration
+.env
+config.js
+
+# Editor and IDE files
+.vscode/
+.idea/
+
+# Logs
+logs/
+
+# Cache and temp files
+*.swp
+*.swo
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Ignore user-specific files
+*.history
+
+# Ignore test coverage reports
+coverage/
+
+# Ignore npm or yarn lock files
+package-lock.json
+yarn.lock
+
+# Ignore OS-generated files
+Icon?
+.DS_Store
+
+# Ignore user-specific npm settings
+.npmrc

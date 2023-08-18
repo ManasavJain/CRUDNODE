@@ -1,0 +1,25 @@
+{
+  "name": "routes_example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "body-parser": "^1.20.2",
+    "bootstrap": "^5.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.1",
+    "handlebars": "^4.7.8",
+    "joi": "^17.9.2",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.2",
+    "sweetalert2": "^11.7.22"
+  },
+  "description": ""
+}

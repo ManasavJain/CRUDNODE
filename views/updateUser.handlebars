@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <style>/* Apply styles to the registration form container */
+/* Apply styles to the registration form container */
+#registrationForm {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for input labels */
+label {
+    font-weight: bold;
+}
+
+/* Style for text inputs */
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style for the submit button */
+#submitButton {
+    display: block;
+    margin: 0 auto;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#submitButton:hover {
+    background-color: #0056b3;
+}
+
+/* Style for the status message */
+#statusMessage {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+</style>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Submit Form Example</title>
+</head>
+<body>
+    <div id="registrationForm">
+        <label for="_id">User ID:</label>
+        <input type="text" id="_id" name="_id" required><br>
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required><br>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <br>
+        <button onclick="updateUser()">Save</button>
+        <div id="statusMessage"></div>
+    </div>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userIdInput = document.getElementById('_id');
+            const firstNameInput = document.getElementById('first_name');
+            const lastNameInput = document.getElementById('last_name');
+            const emailInput = document.getElementById('email');
+
+
+            // Retrieve data from query parameters
+            const queryParams = new URLSearchParams(window.location.search);
+            const userId = queryParams.get('userId');
+            const firstName = queryParams.get('firstName');
+            const lastName = queryParams.get('lastName');
+            const email = queryParams.get('email');
+
+            // Pre-fill form fields with query parameter values
+            userIdInput.value = userId;
+            firstNameInput.value = firstName;
+            lastNameInput.value = lastName;
+            emailInput.value = email;})
+    function updateUser() {
+      const userId = document.getElementById('_id').value;
+      const newFirstName = document.getElementById('first_name').value;
+      const newLastName = document.getElementById('last_name').value;
+      const newEmail = document.getElementById('email').value;
+
+      // Create the updated user object
+      const updatedUser = {
+        _id: userId,
+        first_name: newFirstName,
+        last_name: newLastName,
+        email: newEmail,
+      };
+
+
+
+
+
+      // Make the PUT request to the backend API
+      fetch('/updatemail/data', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response from the backend if needed
+        // For example, you can show a success message or update the user data in the table.
+        console.log('User updated successfully:', data);
+        // If the user updated only a specific field, update the corresponding cell in the table
+        const updatedRow = document.querySelector(`tr[data-id="${userId}"]`);
+        updatedRow.querySelector('td:nth-child(2)').textContent = newFirstName;
+        updatedRow.querySelector('td:nth-child(3)').textContent = newLastName;
+        updatedRow.querySelector('td:nth-child(4)').textContent = newEmail;
+
+        // Hide the edit form after successful update
+        document.getElementById('editForm').style.display = 'none';
+      })
+      .catch(error => {
+        // Handle any error that occurred during the PUT request
+        console.error('Error updating user:', error);
+      });
+    }
+  </script>
+</body>
+{{!-- </html> --}}
+</html>
