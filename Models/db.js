@@ -5,16 +5,16 @@ const dbName = 'ImpData';
 
 const client = new MongoClient(url, { useUnifiedTopology: true });
 
-async function connectToDB() {
-  try {
-    await client.connect();
-    console.log('Connected to MongoDB');
-    return client.db(dbName); // Ensure you are returning the 'db' object here
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    throw error;
-  }
-}
+// async function connectToDB() {
+//   try {
+//     await client.connect();
+//     console.log('Connected to MongoDB');
+//     return client.db(dbName); // Ensure you are returning the 'db' object here
+//   } catch (error) {
+//     console.error('Error connecting to MongoDB:', error);
+//     throw error;
+//   }
+// }
 
 module.exports = { connectToDB };
 // const { ObjectId } = require('mongodb');
