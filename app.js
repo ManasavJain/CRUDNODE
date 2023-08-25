@@ -1,55 +1,66 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
-const {  getAllPeople, insertPeople, updatePeople } = require('./Models/db');
-
 
 const app = express();
-const port = 3000; // Change this to the desired port number
+const port = process.env.PORT || 3000;
+const secretKey = 'your-secret-key';
 
-// Set up Handlebars middleware
-app.engine('handlebars', exphbs.engine());
-app.set('view engine', 'handlebars');
+mongoose.connect('mongodb://localhost:27017/ImpData', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
+const User = mongoose.model('User', {
+  username: String,
+  password: String
+});
 
+app.engine('.hbs', exphbs.engine({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-// Route to fetch all people data from the database and render it using Handlebars
-// app.get('/', async (req, res) => {
-//   try {
-//     const data = await getAllPeople();
-//     res.render('index', { peopleData: data });
-//   } catch (error) {
-//     res.render('error', { error: 'Error fetching data from the database' });
-//   }
-// });
+app.get('/', (req, res) => {
+  res.render('login'); // Render the login.handlebars file
+});
 
-app.get('/', async (req, res) => {
-    try {
-      // Assuming you have the necessary logic to get the data to be inserted from req.body
-      const newData = req.body;
-      const data = await insertPeople(newData);
-      res.render('index', { peopleData:data });
-    } catch (error) {
-      res.render('error', { error: 'Error inserting data into the database' });
+// Create a new user
+app.post('/api/register', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = new User({ username, password });
+    await user.save();
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating user' });
+  }
+});
+
+// User login
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
-  });
-  
-  // Route to update an existing person's data in the database
-  app.put('/update/:id', async (req, res) => {
-    try {
-      const personId = req.params.id;
-      // Assuming you have the necessary logic to get the updated data from req.body
-      const updatedData = req.body;
-      const data = await updatePeople(personId, updatedData);
-      res.render('index', { peopleData:data });
-    } catch (error) {
-      res.render('error', { error: 'Error updating data in the database' });
+
+    if (user.password === password) {
+      const token = jwt.sign({ username }, secretKey);
+      return res.json({ token });
+    } else {
+      return res.status(401).json({ error: 'Authentication failed' });
     }
-  });
-
-
-
-// Additional routes and logic for inserting/updating data can be added here
+  } catch (error) {
+    res.status(500).json({ error: 'Error authenticating user' });
+  }
+});
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });

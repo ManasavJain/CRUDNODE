@@ -31,6 +31,17 @@ const getAllPeople = async () => {
   }
 };
 
+const checkdata = async (_id) => {
+  try {
+    const db = await connectToDB();
+    const collection = db.collection('People');
+    const data = await collection.findOne({ _id });
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw new Error('Error fetching data:', error);
+  }
+};
 
 const insertPeople = async (peopleData) => {
   try {
@@ -89,5 +100,6 @@ module.exports = {
   getAllPeople,
   insertPeople,
   updatePeople,
-  deletePeople
+  deletePeople,
+  checkdata
 };
